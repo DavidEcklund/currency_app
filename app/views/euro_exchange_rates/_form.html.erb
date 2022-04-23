@@ -1,0 +1,32 @@
+<%= form_with(model: euro_exchange_rate) do |form| %>
+  <% if euro_exchange_rate.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(euro_exchange_rate.errors.count, "error") %> prohibited this euro_exchange_rate from being saved:</h2>
+
+      <ul>
+        <% euro_exchange_rate.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :exchange_date %>
+    <%= form.date_select :exchange_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :currency_pair %>
+    <%= form.text_field :currency_pair %>
+  </div>
+
+  <div class="field">
+    <%= form.label :exchange_rate %>
+    <%= form.text_field :exchange_rate %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

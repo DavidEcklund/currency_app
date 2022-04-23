@@ -1,0 +1,2 @@
+class EuroExchangeRate < ApplicationRecord
+end

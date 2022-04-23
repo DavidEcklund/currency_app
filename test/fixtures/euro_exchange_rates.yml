@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  exchange_date: 2022-04-23
+  currency_pair: MyString
+  exchange_rate: 9.99
+
+two:
+  exchange_date: 2022-04-23
+  currency_pair: MyString
+  exchange_rate: 9.99
