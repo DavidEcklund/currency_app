@@ -2,6 +2,12 @@
 
 <h1>Euro Exchange Rates</h1>
 
+<p><%= Date.today %></p>
+<p><%= @current_rates %></p>
+<p><%= "USDEUR: " + @current_rates["USDEUR"].to_s + " EURCHF: " + @current_rates["EURCHF"].to_s %></p>
+
+
+
 <table>
   <thead>
     <tr>
@@ -11,6 +17,7 @@
       <th colspan="3"></th>
     </tr>
   </thead>
+  
 
   <tbody>
     <% @euro_exchange_rates.each do |euro_exchange_rate| %>
@@ -28,4 +35,4 @@
 
 <br>
 
-<%= link_to 'New Euro Exchange Rate', new_euro_exchange_rate_path %>
+<!--<%= link_to 'New Euro Exchange Rate', new_euro_exchange_rate_path %>-->

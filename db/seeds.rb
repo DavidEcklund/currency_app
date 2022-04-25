@@ -2160,9 +2160,10 @@ rates = [{
   }
 ]
 
-rates.each do |rate|
-  EuroExchangeRate.create(exchange_date: rate[:date],
-                          currency_pair: rate[:from_currency] + rate[:to_currency],
-                          exchange_rate: rate[:rate])
+rates.each do |rate_hash|
+  EuroExchangeRate.create(exchange_date: rate_hash[:date],
+                          currency_pair: rate_hash[:from_currency] + 
+                                         rate_hash[:to_currency],
+                          exchange_rate: rate_hash[:rate])
 end
                         
