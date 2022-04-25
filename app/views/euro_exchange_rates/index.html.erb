@@ -6,8 +6,6 @@
 <p><%= @current_rates %></p>
 <p><%= "USDEUR: " + @current_rates["USDEUR"].to_s + " EURCHF: " + @current_rates["EURCHF"].to_s %></p>
 
-
-
 <table>
   <thead>
     <tr>
@@ -19,19 +17,19 @@
   </thead>
   
 
-  <tbody>
-    <% @euro_exchange_rates.each do |euro_exchange_rate| %>
-      <tr>
-        <td><%= euro_exchange_rate.exchange_date %></td>
-        <td><%= euro_exchange_rate.currency_pair %></td>
-        <td><%= euro_exchange_rate.exchange_rate %></td>
-        <td><%= link_to 'Show', euro_exchange_rate %></td>
-        <td><%= link_to 'Edit', edit_euro_exchange_rate_path(euro_exchange_rate) %></td>
-        <td><%= link_to 'Destroy', euro_exchange_rate, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<!--  <tbody>-->
+<!--    <% @euro_exchange_rates.each do |euro_exchange_rate| %>-->
+<!--      <tr>-->
+<!--        <td><%= euro_exchange_rate.exchange_date %></td>-->
+<!--        <td><%= euro_exchange_rate.currency_pair %></td>-->
+<!--        <td><%= euro_exchange_rate.exchange_rate %></td>-->
+<!--        <td><%= link_to 'Show', euro_exchange_rate %></td>-->
+<!--        <td><%= link_to 'Edit', edit_euro_exchange_rate_path(euro_exchange_rate) %></td>-->
+<!--        <td><%= link_to 'Destroy', euro_exchange_rate, method: :delete, data: { confirm: 'Are you sure?' } %></td>-->
+<!--      </tr>-->
+<!--    <% end %>-->
+<!--  </tbody>-->
+<!--</table>-->
 
 <br>
 

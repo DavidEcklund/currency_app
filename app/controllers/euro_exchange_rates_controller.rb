@@ -16,6 +16,11 @@ class EuroExchangeRatesController < ApplicationController
     @mclb.cache = 'tmp.json'
   
     get_todays_rates
+    
+    job_id =
+      Rufus::Scheduler.singleton.cron '*/1 * * * * Europe/Berlin' do
+        Rails.logger.info "time flies, it's now #{Time.current} for #{job_id}"
+      end
   end
   
   def get_todays_rates
