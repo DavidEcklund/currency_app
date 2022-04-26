@@ -17,11 +17,11 @@ class EuroExchangeRatesController < ApplicationController
   
     get_todays_rates
     
-    job_id =
-      Rufus::Scheduler.singleton.cron '*/1 * * * * Europe/Berlin' do
-        puts "time flies, it's now #{Time.current} for #{job_id}"
-        # Rails.logger.info "time flies, it's now #{Time.current} for #{job_id}"
-      end
+    # job_id =
+    #   Rufus::Scheduler.singleton.cron '*/1 * * * * Europe/Berlin' do
+    #     puts "time flies, it's now #{Time.current} for #{job_id}"
+    #     # Rails.logger.info "time flies, it's now #{Time.current} for #{job_id}"
+    #   end
   end
   
   def get_todays_rates
