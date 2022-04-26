@@ -2,35 +2,42 @@
 
 <h1>Euro Exchange Rates</h1>
 
-<p><%= Date.today %></p>
-<p><%= @current_rates %></p>
-<p><%= "USDEUR: " + @current_rates["USDEUR"].to_s + " EURCHF: " + @current_rates["EURCHF"].to_s %></p>
+<h3><%= Date.today %></h3>
 
 <table>
   <thead>
     <tr>
-      <th>Exchange date</th>
       <th>Currency pair</th>
       <th>Exchange rate</th>
-      <th colspan="3"></th>
+      <th colspan="2"></th>
     </tr>
   </thead>
   
 
-<!--  <tbody>-->
-<!--    <% @euro_exchange_rates.each do |euro_exchange_rate| %>-->
-<!--      <tr>-->
-<!--        <td><%= euro_exchange_rate.exchange_date %></td>-->
-<!--        <td><%= euro_exchange_rate.currency_pair %></td>-->
-<!--        <td><%= euro_exchange_rate.exchange_rate %></td>-->
-<!--        <td><%= link_to 'Show', euro_exchange_rate %></td>-->
-<!--        <td><%= link_to 'Edit', edit_euro_exchange_rate_path(euro_exchange_rate) %></td>-->
-<!--        <td><%= link_to 'Destroy', euro_exchange_rate, method: :delete, data: { confirm: 'Are you sure?' } %></td>-->
-<!--      </tr>-->
-<!--    <% end %>-->
-<!--  </tbody>-->
-<!--</table>-->
+  <tbody>
+    <% @current_rates.each do |pair, rate| %>
+      <tr>
+        <td class="pair"><%= pair %></td>
+        <td class="rate"><%= rate.round(6) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
-<!--<br>-->
+<label for="amount">Amount: </label>
+<input type="number" id="amount" name="amount" required>
+       
+<label for="currencyPair">Choose a currency pair:</label>
+<select name="currencyPair" id="currencyPair">
+    <option value="">--Please choose currency pair--</option>
+  <% @current_rates.each do |pair, rate| %>
+    <option value="<%= rate.round(6) %>"><%= pair %></option> 
+  <% end %>
+</select>
 
-<!--<%= link_to 'New Euro Exchange Rate', new_euro_exchange_rate_path %>-->
+<button type="button" id="convert">Convert!</button>
+
+<h3>Result:</h3>
+<h2 id="result"></h2>
+
+<%= javascript_pack_tag 'calculate'%>
