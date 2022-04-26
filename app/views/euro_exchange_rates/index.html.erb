@@ -31,7 +31,7 @@
 <select name="currencyPair" id="currencyPair">
     <option value="">--Please choose currency pair--</option>
   <% @current_rates.each do |pair, rate| %>
-    <option value="<%= rate.round(6) %>"><%= pair %></option> 
+    <option value="<%= rate %>"><%= pair %></option> 
   <% end %>
 </select>
 

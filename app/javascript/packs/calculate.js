@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
   convertButton.addEventListener('click', (event) => {
     if (amountNode.value && currencyPairNode.value) {
       resultNode.textContent = (amountNode.value * currencyPairNode.value).toFixed(2);
-      console.log("hiyo!");
     }
   });
 });

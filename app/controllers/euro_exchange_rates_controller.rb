@@ -22,7 +22,7 @@ class EuroExchangeRatesController < ApplicationController
   end
   
   def load_current_rates_into_db
-    unless todays_rates_in_db
+    unless todays_rates_in_db?
       @current_rates.each do |currencies, rate|
         EuroExchangeRate.create(exchange_date: Date.today,
                                 currency_pair: currencies,
@@ -44,7 +44,7 @@ class EuroExchangeRatesController < ApplicationController
     puts "Initializing scheduled job"
     
     if File.read('tmp.json').length == 0 ||
-       !todays_rates_in_db  &&  (Time.now > Time.parse("07:00 am"))
+       !todays_rates_in_db?  &&  (Time.now > Time.parse("07:00 am"))
           api_call
           puts "Getting today's rates."
     end
@@ -54,12 +54,12 @@ class EuroExchangeRatesController < ApplicationController
         api_call
       end      
     job_txt = File.open('job.txt', "a")
-    job_txt.write(job_id)
+    job_txt.write("Started cron job_id: " + job_id)
     job_txt.close
-    puts "Started cron job id: " + File.read('job.txt') + "\n"       
+    puts File.read('job.txt') + "\n"       
   end
   
-  def todays_rates_in_db
+  def todays_rates_in_db?
     @euro_exchange_rates.any? {|rate| rate[:exchange_date] == Date.today}
   end
   
