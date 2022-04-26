@@ -11,24 +11,17 @@ class EuroExchangeRatesController < ApplicationController
     @mclb = Money::Bank::CurrencylayerBank.new
     @mclb.access_key = '449c64b1f17fc3a048e0ef51fec42c6d'
     Money.default_infinite_precision = true
-    
-    # Define cache
     @mclb.cache = 'tmp.json'
   
-    get_todays_rates
+    # prevents multiple users from initializing multiple daily jobs
+    initialize_scheduled_job unless job_scheduled?
     
-    # job_id =
-    #   Rufus::Scheduler.singleton.cron '*/1 * * * * Europe/Berlin' do
-    #     puts "time flies, it's now #{Time.current} for #{job_id}"
-    #     # Rails.logger.info "time flies, it's now #{Time.current} for #{job_id}"
-    #   end
+    json = File.read('tmp.json')
+    initialize_current_rates(json)
+    load_current_rates_into_db
   end
   
-  def get_todays_rates
-    # @mclb.update_rates
-    json = File.read('tmp.json')
-    initialize_all_rates(json)
-    
+  def load_current_rates_into_db
     unless todays_rates_in_db
       @current_rates.each do |currencies, rate|
         EuroExchangeRate.create(exchange_date: Date.today,
@@ -38,36 +31,59 @@ class EuroExchangeRatesController < ApplicationController
     end
   end
   
+  def job_scheduled?
+    File.read('job.txt').length > 0
+  end
+  
+  def api_call
+    @mclb.update_rates
+    puts File.read("tmp.json") 
+  end
+
+  def initialize_scheduled_job
+    puts "Initializing scheduled job"
+    
+    if File.read('tmp.json').length == 0 ||
+       !todays_rates_in_db  &&  (Time.now > Time.parse("07:00 am"))
+          api_call
+          puts "Getting today's rates."
+    end
+    
+    job_id =
+      Rufus::Scheduler.singleton.cron '0 7 * * *' do # UTC on heroku is default
+        api_call
+      end      
+    job_txt = File.open('job.txt', "a")
+    job_txt.write(job_id)
+    job_txt.close
+    puts "Started cron job id: " + File.read('job.txt') + "\n"       
+  end
+  
   def todays_rates_in_db
     @euro_exchange_rates.any? {|rate| rate[:exchange_date] == Date.today}
   end
   
-  def initialize_all_rates(json)
+  def initialize_current_rates(json)
     quotes = JSON.parse(json)["quotes"]
     @current_rates = {"USDEUR" => quotes["USDEUR"]}
     @current_rates["EURUSD"] = 1 / @current_rates["USDEUR"]
     @current_rates["EURCHF"] = @current_rates["USDEUR"] / quotes["USDCHF"]
     @current_rates["CHFEUR"] = 1 / @current_rates["EURCHF"]
   end
-  
-#   <p><% old_rate = @euro_exchange_rates.find{|rate_obj| rate_obj[:exchange_date] = "2019-04-22"} %></p>
-# <p><%= 'Old rate ' + old_rate[:exchange_rate].to_s + ' ' + old_rate[:currency_pair] %></p>
-# <p><%= Money.add_rate(old_rate[:currency_pair][0..2], old_rate[:currency_pair][3..-1], 3) %></p>
-# <p><%= Money.euro(1000).exchange_to("USD") %></p>
 
-  # GET /euro_exchange_rates/1
-  # GET /euro_exchange_rates/1.json
-  def show
-  end
+  # # GET /euro_exchange_rates/1
+  # # GET /euro_exchange_rates/1.json
+  # def show
+  # end
 
-  # GET /euro_exchange_rates/new
-  def new
-    @euro_exchange_rate = EuroExchangeRate.new
-  end
+  # # GET /euro_exchange_rates/new
+  # def new
+  #   @euro_exchange_rate = EuroExchangeRate.new
+  # end
 
-  # GET /euro_exchange_rates/1/edit
-  def edit
-  end
+  # # GET /euro_exchange_rates/1/edit
+  # def edit
+  # end
 
   # POST /euro_exchange_rates
   # POST /euro_exchange_rates.json
@@ -85,29 +101,29 @@ class EuroExchangeRatesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /euro_exchange_rates/1
-  # PATCH/PUT /euro_exchange_rates/1.json
-  def update
-    respond_to do |format|
-      if @euro_exchange_rate.update(euro_exchange_rate_params)
-        format.html { redirect_to @euro_exchange_rate, notice: 'Euro exchange rate was successfully updated.' }
-        format.json { render :show, status: :ok, location: @euro_exchange_rate }
-      else
-        format.html { render :edit }
-        format.json { render json: @euro_exchange_rate.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  # # PATCH/PUT /euro_exchange_rates/1
+  # # PATCH/PUT /euro_exchange_rates/1.json
+  # def update
+  #   respond_to do |format|
+  #     if @euro_exchange_rate.update(euro_exchange_rate_params)
+  #       format.html { redirect_to @euro_exchange_rate, notice: 'Euro exchange rate was successfully updated.' }
+  #       format.json { render :show, status: :ok, location: @euro_exchange_rate }
+  #     else
+  #       format.html { render :edit }
+  #       format.json { render json: @euro_exchange_rate.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
 
-  # DELETE /euro_exchange_rates/1
-  # DELETE /euro_exchange_rates/1.json
-  def destroy
-    @euro_exchange_rate.destroy
-    respond_to do |format|
-      format.html { redirect_to euro_exchange_rates_url, notice: 'Euro exchange rate was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
+  # # DELETE /euro_exchange_rates/1
+  # # DELETE /euro_exchange_rates/1.json
+  # def destroy
+  #   @euro_exchange_rate.destroy
+  #   respond_to do |format|
+  #     format.html { redirect_to euro_exchange_rates_url, notice: 'Euro exchange rate was successfully destroyed.' }
+  #     format.json { head :no_content }
+  #   end
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.

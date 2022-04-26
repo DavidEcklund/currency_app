@@ -18,6 +18,9 @@ Due to the API limiting the rate of conversion calls, I wrote my own conversion 
 I need multiple conversions due to another limitation in the free tier: USD-based rates 
 are the only ones available, and we need EUR-based ones.
 
+### Time Zone
+Uses CET (UTC +1) to the exclusion of CEST.
+
 ### Seed Data
 I modified the provided seed data to make it appear to be providing the last two weeks 
 of rates, without actually getting them.
