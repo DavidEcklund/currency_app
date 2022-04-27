@@ -29,7 +29,7 @@ in the database. The second-hand calculations preserve "infinite" precision, whi
 presenting rounded figures to the user.
 
 #### Front end calculation
-I use JavaScript for the calculation, using the rates in the DOM that the user sees.
+I use JavaScript for the calculation, using rates in the DOM.
 
 ## Further development
 
